@@ -1,0 +1,31 @@
+/* Styles specific to the student dashboard */
+.quiz-container {
+max-width: 800px;
+margin: 0 auto;
+}
+
+.quiz-question {
+margin-bottom: 30px;
+}
+
+.quiz-options {
+list-style: none;
+}
+
+.quiz-options li {
+padding: 15px;
+background-color: #f8f9fa;
+margin-bottom: 10px;
+border-radius: 5px;
+cursor: pointer;
+transition: all 0.3s;
+}
+
+.quiz-options li:hover {
+background-color: #e9ecef;
+}
+
+.quiz-options li.selected {
+background-color: var(--accent);
+color: white;
+}

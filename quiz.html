@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vidyanhub - Student Quizzes</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: fadeInDown 1s ease;
+        }
+        
+        header h1 {
+            color: white;
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        header p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.2rem;
+        }
+        
+        .quiz-selection {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+        
+        .quiz-card {
+            background: white;
+            border-radius: 15px;
+            width: 300px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: fadeInUp 1s ease;
+        }
+        
+        .quiz-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+        
+        .quiz-card i {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            color: #4a00e0;
+        }
+        
+        .quiz-card h2 {
+            margin-bottom: 15px;
+            color: #4a00e0;
+        }
+        
+        .quiz-card p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .start-btn {
+            background: #4a00e0;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .start-btn:hover {
+            background: #3a00b0;
+            transform: scale(1.05);
+        }
+        
+        .quiz-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            margin: 0 auto;
+            max-width: 800px;
+            display: none;
+            animation: zoomIn 0.5s ease;
+        }
+        
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .quiz-title {
+            color: #4a00e0;
+            font-size: 1.8rem;
+        }
+        
+        .question-count {
+            background: #f3f4ff;
+            padding: 8px 15px;
+            border-radius: 50px;
+            font-weight: 600;
+            color: #4a00e0;
+        }
+        
+        .question-text {
+            font-size: 1.4rem;
+            margin-bottom: 25px;
+            line-height: 1.5;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .options-container {
+            display: grid;
+            grid-gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .option {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .option:hover {
+            background: #eef0ff;
+            transform: translateX(5px);
+        }
+        
+        .option.selected {
+            background: #4a00e0;
+            color: white;
+            border-color: #3a00b0;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .nav-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .prev-btn {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .prev-btn:hover {
+            background: #5a6268;
+        }
+        
+        .next-btn {
+            background: #4a00e0;
+            color: white;
+        }
+        
+        .next-btn:hover {
+            background: #3a00b0;
+        }
+        
+        .results-container {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            margin: 0 auto;
+            max-width: 600px;
+            display: none;
+            animation: zoomIn 0.5s ease;
+        }
+        
+        .results-container h2 {
+            color: #4a00e0;
+            margin-bottom: 20px;
+            font-size: 2.2rem;
+        }
+        
+        .score-text {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            color: #333;
+        }
+        
+        .score {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: #4a00e0;
+            margin: 20px 0;
+        }
+        
+        .celebrate {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            animation: bounce 1s infinite;
+        }
+        
+        .back-btn {
+            background: #4a00e0;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            font-size: 1.1rem;
+        }
+        
+        .back-btn:hover {
+            background: #3a00b0;
+            transform: scale(1.05);
+        }
+        
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes zoomIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background: #f0f0f0;
+            border-radius: 5px;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, #4a00e0, #8e2de2);
+            border-radius: 5px;
+            transition: width 0.3s ease;
+        }
+        
+        .correct {
+            background: #4caf50 !important;
+            border-color: #388e3c !important;
+        }
+        
+        .incorrect {
+            background: #f44336 !important;
+            border-color: #d32f2f !important;
+        }
+        
+        .feedback {
+            text-align: center;
+            margin-top: 20px;
+            font-weight: 500;
+            min-height: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Vidyanhub Quiz Challenge</h1>
+            <p>Test your knowledge and improve your skills</p>
+        </header>
+        
+        <div class="quiz-selection">
+            <div class="quiz-card" data-quiz="math">
+                <i class="fas fa-calculator"></i>
+                <h2>Mathematics Quiz</h2>
+                <p>Test your math skills with these challenging problems</p>
+                <button class="start-btn" data-quiz="math">Start Quiz</button>
+            </div>
+            
+            <div class="quiz-card" data-quiz="algebra">
+                <i class="fas fa-square-root-alt"></i>
+                <h2>Algebra Quiz</h2>
+                <p>Solve equations and expressions in this algebra challenge</p>
+                <button class="start-btn" data-quiz="algebra">Start Quiz</button>
+            </div>
+            
+            <div class="quiz-card" data-quiz="gk">
+                <i class="fas fa-globe-americas"></i>
+                <h2>General Knowledge</h2>
+                <p>How well do you know the world? Take this quiz to find out!</p>
+                <button class="start-btn" data-quiz="gk">Start Quiz</button>
+            </div>
+        </div>
+        
+        <div class="quiz-container" id="quiz-container">
+            <div class="quiz-header">
+                <h2 class="quiz-title" id="quiz-title">Mathematics Quiz</h2>
+                <div class="question-count" id="question-count">Question 1 of 5</div>
+            </div>
+            
+            <div class="progress-bar">
+                <div class="progress" id="progress"></div>
+            </div>
+            
+            <div class="question-text" id="question-text">
+                What is the value of π (pi) rounded to two decimal places?
+            </div>
+            
+            <div class="options-container" id="options-container">
+                <div class="option">3.14</div>
+                <div class="option">3.15</div>
+                <div class="option">3.16</div>
+                <div class="option">3.18</div>
+            </div>
+            
+            <div class="feedback" id="feedback"></div>
+            
+            <div class="navigation">
+                <button class="nav-btn prev-btn" id="prev-btn">Previous</button>
+                <button class="nav-btn next-btn" id="next-btn">Next</button>
+            </div>
+        </div>
+        
+        <div class="results-container" id="results-container">
+            <div class="celebrate">🎉</div>
+            <h2>Quiz Completed!</h2>
+            <div class="score-text">Your final score is:</div>
+            <div class="score" id="final-score">0/5</div>
+            <div class="score-text" id="score-message">Keep practicing to improve your knowledge!</div>
+            <button class="back-btn" id="back-btn">Back to Quizzes</button>
+        </div>
+    </div>
+
+    <script>
+        // Quiz data
+        const quizzes = {
+            math: {
+                title: "Mathematics Quiz",
+                questions: [
+                    {
+                        question: "What is the value of π (pi) rounded to two decimal places?",
+                        options: ["3.14", "3.15", "3.16", "3.18"],
+                        answer: 0
+                    },
+                    {
+                        question: "What is 15²?",
+                        options: ["225", "250", "275", "300"],
+                        answer: 0
+                    },
+                    {
+                        question: "What is the square root of 144?",
+                        options: ["12", "14", "16", "18"],
+                        answer: 0
+                    },
+                    {
+                        question: "What is ⅓ as a decimal?",
+                        options: ["0.333...", "0.5", "0.75", "0.25"],
+                        answer: 0
+                    },
+                    {
+                        question: "What is the area of a rectangle with length 8 and width 5?",
+                        options: ["40", "35", "30", "25"],
+                        answer: 0
+                    }
+                ]
+            },
+            algebra: {
+                title: "Algebra Quiz",
+                questions: [
+                    {
+                        question: "If x + 5 = 12, what is the value of x?",
+                        options: ["7", "6", "8", "9"],
+                        answer: 0
+                    },
+                    {
+                        question: "Simplify: 2x + 3x",
+                        options: ["5x", "6x", "x⁵", "5 + x"],
+                        answer: 0
+                    },
+                    {
+                        question: "Solve for y: 2y - 4 = 10",
+                        options: ["7", "6", "8", "9"],
+                        answer: 0
+                    },
+                    {
+                        question: "Expand: (x + 3)(x + 2)",
+                        options: ["x² + 5x + 6", "x² + 6x + 5", "x² + 3x + 6", "x² + 2x + 5"],
+                        answer: 0
+                    },
+                    {
+                        question: "If 3x = 15, what is the value of x?",
+                        options: ["5", "3", "15", "10"],
+                        answer: 0
+                    }
+                ]
+            },
+            gk: {
+                title: "General Knowledge Quiz",
+                questions: [
+                    {
+                        question: "What is the capital of France?",
+                        options: ["Paris", "London", "Berlin", "Madrid"],
+                        answer: 0
+                    },
+                    {
+                        question: "How many continents are there on Earth?",
+                        options: ["7", "6", "5", "8"],
+                        answer: 0
+                    },
+                    {
+                        question: "Which planet is known as the Red Planet?",
+                        options: ["Mars", "Venus", "Jupiter", "Saturn"],
+                        answer: 0
+                    },
+                    {
+                        question: "What is the largest ocean on Earth?",
+                        options: ["Pacific Ocean", "Atlantic Ocean", "Indian Ocean", "Arctic Ocean"],
+                        answer: 0
+                    },
+                    {
+                        question: "Who painted the Mona Lisa?",
+                        options: ["Leonardo da Vinci", "Pablo Picasso", "Vincent van Gogh", "Michelangelo"],
+                        answer: 0
+                    }
+                ]
+            }
+        };
+
+        // DOM elements
+        const quizContainer = document.getElementById('quiz-container');
+        const resultsContainer = document.getElementById('results-container');
+        const quizTitle = document.getElementById('quiz-title');
+        const questionCount = document.getElementById('question-count');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const progress = document.getElementById('progress');
+        const feedback = document.getElementById('feedback');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const finalScore = document.getElementById('final-score');
+        const scoreMessage = document.getElementById('score-message');
+        const backBtn = document.getElementById('back-btn');
+        const startButtons = document.querySelectorAll('.start-btn');
+        const quizCards = document.querySelectorAll('.quiz-card');
+
+        // Quiz state
+        let currentQuiz = null;
+        let currentQuestion = 0;
+        let score = 0;
+        let userAnswers = [];
+
+        // Initialize the app
+        function init() {
+            startButtons.forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const quizId = e.target.getAttribute('data-quiz');
+                    startQuiz(quizId);
+                });
+            });
+            
+            quizCards.forEach(card => {
+                card.addEventListener('click', (e) => {
+                    if (!e.target.classList.contains('start-btn')) {
+                        const quizId = card.getAttribute('data-quiz');
+                        startQuiz(quizId);
+                    }
+                });
+            });
+            
+            prevBtn.addEventListener('click', goToPreviousQuestion);
+            nextBtn.addEventListener('click', goToNextQuestion);
+            backBtn.addEventListener('click', goBackToQuizzes);
+        }
+
+        // Start a quiz
+        function startQuiz(quizId) {
+            currentQuiz = quizId;
+            currentQuestion = 0;
+            score = 0;
+            userAnswers = new Array(quizzes[quizId].questions.length).fill(null);
+            
+            // Update UI
+            quizTitle.textContent = quizzes[quizId].title;
+            document.querySelector('.quiz-selection').style.display = 'none';
+            quizContainer.style.display = 'block';
+            resultsContainer.style.display = 'none';
+            
+            showQuestion();
+        }
+
+        // Show current question
+        function showQuestion() {
+            const quiz = quizzes[currentQuiz];
+            const question = quiz.questions[currentQuestion];
+            
+            // Update progress
+            progress.style.width = `${((currentQuestion + 1) / quiz.questions.length) * 100}%`;
+            
+            // Update question count
+            questionCount.textContent = `Question ${currentQuestion + 1} of ${quiz.questions.length}`;
+            
+            // Update question text
+            questionText.textContent = question.question;
+            
+            // Update options
+            optionsContainer.innerHTML = '';
+            question.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.classList.add('option');
+                if (userAnswers[currentQuestion] === index) {
+                    optionElement.classList.add('selected');
+                }
+                optionElement.textContent = option;
+                optionElement.addEventListener('click', () => selectOption(index));
+                optionsContainer.appendChild(optionElement);
+            });
+            
+            // Update navigation buttons
+            prevBtn.disabled = currentQuestion === 0;
+            nextBtn.textContent = currentQuestion === quiz.questions.length - 1 ? 'Finish' : 'Next';
+            
+            // Clear feedback
+            feedback.textContent = '';
+        }
+
+        // Select an option
+        function selectOption(optionIndex) {
+            const options = document.querySelectorAll('.option');
+            options.forEach(option => option.classList.remove('selected', 'correct', 'incorrect'));
+            options[optionIndex].classList.add('selected');
+            
+            userAnswers[currentQuestion] = optionIndex;
+            
+            // Check if answer is correct
+            const correctIndex = quizzes[currentQuiz].questions[currentQuestion].answer;
+            if (optionIndex === correctIndex) {
+                options[optionIndex].classList.add('correct');
+                feedback.textContent = 'Correct! Well done!';
+                feedback.style.color = '#4caf50';
+            } else {
+                options[optionIndex].classList.add('incorrect');
+                options[correctIndex].classList.add('correct');
+                feedback.textContent = 'Incorrect. The right answer is highlighted.';
+                feedback.style.color = '#f44336';
+            }
+        }
+
+        // Go to next question
+        function goToNextQuestion() {
+            if (userAnswers[currentQuestion] === null) {
+                feedback.textContent = 'Please select an answer before proceeding.';
+                feedback.style.color = '#f44336';
+                return;
+            }
+            
+            if (currentQuestion < quizzes[currentQuiz].questions.length - 1) {
+                currentQuestion++;
+                showQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        // Go to previous question
+        function goToPreviousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                showQuestion();
+            }
+        }
+
+        // Show quiz results
+        function showResults() {
+            // Calculate score
+            score = 0;
+            quizzes[currentQuiz].questions.forEach((question, index) => {
+                if (userAnswers[index] === question.answer) {
+                    score++;
+                }
+            });
+            
+            // Update results UI
+            finalScore.textContent = `${score}/${quizzes[currentQuiz].questions.length}`;
+            
+            // Set message based on score
+            if (score === quizzes[currentQuiz].questions.length) {
+                scoreMessage.textContent = 'Perfect! You are a genius!';
+            } else if (score >= quizzes[currentQuiz].questions.length * 0.7) {
+                scoreMessage.textContent = 'Great job! You know your stuff!';
+            } else if (score >= quizzes[currentQuiz].questions.length * 0.5) {
+                scoreMessage.textContent = 'Good effort! Keep learning!';
+            } else {
+                scoreMessage.textContent = 'Keep practicing to improve your knowledge!';
+            }
+            
+            // Show results container
+            quizContainer.style.display = 'none';
+            resultsContainer.style.display = 'block';
+        }
+
+        // Go back to quiz selection
+        function goBackToQuizzes() {
+            resultsContainer.style.display = 'none';
+            document.querySelector('.quiz-selection').style.display = 'flex';
+        }
+
+        // Initialize the application
+        init();
+    </script>
+</body>
+</html>

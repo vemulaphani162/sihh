@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vidyanhub - Student Portal</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="css/student.css">
+    <script src="js/auth.js"></script>
+    <script src="js/student.js"></script>
+</head>
+<body>
+    <!-- Student Dashboard -->
+    <div id="studentDashboard" class="dashboard">
+        <div class="header">
+            <div class="container header-content">
+                <div class="logo">Vidyanhub - Student Portal</div>
+                <div class="user-info">
+                    <span>Welcome, Student</span>
+                    <button class="btn btn-logout" onclick="logout()">Logout</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="sidebar">
+            <ul class="sidebar-menu">
+                <li class="active" data-tab="dashboard">Dashboard</li>
+                <li data-tab="videos">Video Lectures</li>
+                <li data-tab="notes">Study Notes</li>
+                <li data-tab="assignments">Assignments</li>
+                <li data-tab="quizzes">Quizzes</li>
+                <li data-tab="progress">My Progress</li>
+            </ul>
+        </div>
+        
+        <div class="main-content">
+            <div id="studentDashboardContent" class="tab-content">
+                <!-- Dashboard content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Video Modal -->
+    <div id="videoModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h3 id="videoModalTitle" style="margin-bottom: 15px;"></h3>
+            <video id="videoPlayer" width="100%" controls></video>
+        </div>
+    </div>
+
+    <!-- PDF Modal -->
+    <div id="pdfModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h3 id="pdfModalTitle" style="margin-bottom: 15px;"></h3>
+            <iframe id="pdfViewer" width="100%" height="600px" style="border: none;"></iframe>
+        </div>
+    </div>
+</body>
+</html>
